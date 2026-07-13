@@ -1,0 +1,33 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Environment / secrets
+.env
+.env.*
+
+# IDE
+.vscode/*
+!.vscode/settings.json
+
+# GIS / large data outputs
+*.tif
+*.tiff
+*.shp
+*.shx
+*.dbf
+*.prj
+*.sbn
+*.sbx
+*.qgz~
+*.gpkg-wal
+*.gpkg-shm
+
+# OS
+Thumbs.db
+.DS_Store

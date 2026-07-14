@@ -19,6 +19,7 @@
 
 1. **แปลงราคาข้อมูลดาวเทียม GISTDA** — ดึงตารางราคาจากไฟล์ PDF ของ GISTDA มาแปลงเป็น CSV / XLSX / HTML
 2. **แปลงไฟล์ GIS** — แปลง Shapefile ขอบเขตประเทศไทยเป็น GeoJSON และสร้างแผนที่ Interactive บน Google Maps
+3. **Sentinel-2 Thailand 2026 Viewer** — แผนที่ Interactive แสดงภาพ Sentinel-2 median composite ปลอดเมฆ ประมวลผลจาก Google Earth Engine ซ้อนทับ Google Satellite
 
 ---
 

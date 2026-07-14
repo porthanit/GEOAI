@@ -18,6 +18,9 @@ __pycache__/
 # GIS / large data outputs
 *.tif
 *.tiff
+*.tif.ovr
+*.tfw
+*.tif.aux.xml
 *.shp
 *.shx
 *.dbf
@@ -27,6 +30,9 @@ __pycache__/
 *.qgz~
 *.gpkg-wal
 *.gpkg-shm
+
+# Course source material (not part of the submission)
+GEE4NRE*/
 
 # OS
 Thumbs.db

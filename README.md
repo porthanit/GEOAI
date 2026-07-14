@@ -98,6 +98,28 @@ python make_thailand_map.py
 
 ---
 
+## 🌏 ส่วนที่ 3: Sentinel-2 Thailand 2026 — Cloud-free Median Viewer
+
+แผนที่ Interactive แสดงภาพ Sentinel-2 แบบ **median composite ปลอดเมฆ** เฉพาะพื้นที่ประเทศไทย ปี 2026 ประมวลผลจาก [Google Earth Engine](https://earthengine.google.com/) ซ้อนทับบนพื้นหลัง Google Satellite พร้อมเส้นขอบเขตประเทศไทย
+
+| ไฟล์ | รายละเอียด |
+|---|---|
+| [`sentinel2.html`](sentinel2.html) | หน้าเว็บ Leaflet: Google Satellite (base) + Sentinel-2 median composite (overlay ปรับความโปร่งใสได้) + เส้นขอบประเทศไทย |
+
+**หลักการประมวลผล**
+- Collection: `COPERNICUS/S2_SR_HARMONIZED` กรองช่วงวันที่ 2026-01-01 ถึง 2026-12-31 และขอบเขตประเทศไทย
+- Cloud mask: join กับ `COPERNICUS/S2_CLOUD_PROBABILITY` (มาตรฐาน s2cloudless) แล้ว mask พิกเซลที่ probability ≥ 40%
+- รวมภาพด้วย `.median()` แล้ว clip ตามขอบเขตประเทศไทย (true color: B4/B3/B2)
+- Export เป็น XYZ tile pyramid ไปยัง Google Cloud Storage ด้วย `ee.batch.Export.map.toCloudStorage()` เพื่อให้ `sentinel2.html` แสดงผลได้แบบ static ไม่ต้อง login GEE ทุกครั้งที่เปิด
+
+> ⚠️ เนื่องจากปี 2026 ยังไม่จบ (composite รันจากข้อมูลที่มีถึงวันที่ export จริง ไม่ใช่ข้อมูลทั้งปี) และ tile ต้อง export ผ่านสคริปต์ Python (`earthengine-api`) ที่ผูกกับบัญชี/โปรเจกต์ Earth Engine ของผู้ใช้เอง — ยังไม่รวมสคริปต์ export ไว้ในโฟลเดอร์นี้
+
+### วิธีใช้
+
+เปิด [`sentinel2.html`](sentinel2.html) ด้วยเบราว์เซอร์ได้โดยตรง (ดับเบิลคลิกไฟล์ หรือใช้ VS Code extension **Live Server**) — เส้นขอบประเทศไทยและพื้นหลัง Google Satellite จะโหลดได้ทันทีเพราะดึงจากอินเทอร์เน็ต ส่วนภาพ Sentinel-2 จะแสดงได้ต่อเมื่อได้ export tile ไปยัง Google Cloud Storage แล้วใส่ tile URL ในไฟล์ (ดูตัวแปร `SENTINEL_TILE_URL` ในโค้ด)
+
+---
+
 ## 📁 โครงสร้างโปรเจกต์
 
 ```
@@ -107,6 +129,7 @@ GEOAI/
 ├── Gistda_Price_List.csv
 ├── Gistda_Price_List.xlsx
 ├── Gistda_Price_List.html
+├── sentinel2.html               # แผนที่ Sentinel-2 Thailand 2026 cloud-free median (GEE)
 ├── make_preview_image.py        # สคริปต์สร้างภาพตัวอย่างสำหรับ README
 ├── requirements.txt
 ├── docs/

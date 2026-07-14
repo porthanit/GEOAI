@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinel-2 Thailand 2026 — Cloud-free Median</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; }
+  #map { width: 100%; height: 100%; }
+  .info-box {
+    background: rgba(255,255,255,0.9);
+    padding: 8px 12px;
+    font: 13px/1.4 sans-serif;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    max-width: 260px;
+  }
+  .opacity-control {
+    background: rgba(255,255,255,0.9);
+    padding: 8px 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    font: 12px sans-serif;
+  }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // --- CONFIG -----------------------------------------------------------
+  // Fill in after export_sentinel2_thailand.py finishes and the bucket path
+  // is made public (see script output / README.md).
+  const SENTINEL_TILE_URL = "https://storage.googleapis.com/thanitnuk-sentinel2/thailand_2026_median/{z}/{x}/{y}.png";
+  const SENTINEL_MAX_NATIVE_ZOOM = 12; // must match maxZoom used in the export script
+  // ------------------------------------------------------------------------
+
+  const map = L.map('map', {
+    center: [13.0, 101.0],
+    zoom: 6,
+    minZoom: 5,
+    maxZoom: 18,
+  });
+
+  const googleSatellite = L.tileLayer(
+    'https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+    {
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      attribution: '&copy; Google',
+      maxZoom: 20,
+    }
+  ).addTo(map);
+
+  const sentinel2Composite = L.tileLayer(SENTINEL_TILE_URL, {
+    maxNativeZoom: SENTINEL_MAX_NATIVE_ZOOM,
+    maxZoom: 20,
+    attribution: 'Sentinel-2 median composite (Copernicus/ESA) via Google Earth Engine',
+    opacity: 1,
+  }).addTo(map);
+
+  const thailandBoundary = L.geoJSON(null, {
+    style: { color: '#ffeb3b', weight: 2, fillOpacity: 0, opacity: 0.9 },
+  }).addTo(map);
+
+  fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries/THA.geo.json')
+    .then((res) => res.json())
+    .then((data) => thailandBoundary.addData(data))
+    .catch((err) => console.error('Failed to load Thailand boundary:', err));
+
+  const layerControl = L.control.layers(
+    { 'Google Satellite': googleSatellite },
+    {
+      'Sentinel-2 Median 2026 (Thailand)': sentinel2Composite,
+      'Thailand Boundary': thailandBoundary,
+    },
+    { collapsed: false }
+  ).addTo(map);
+
+  // Opacity slider for the Sentinel-2 overlay
+  const OpacityControl = L.Control.extend({
+    onAdd: function () {
+      const div = L.DomUtil.create('div', 'opacity-control');
+      div.innerHTML =
+        'Sentinel-2 opacity: <input id="opacitySlider" type="range" min="0" max="100" value="100" style="vertical-align:middle;">';
+      L.DomEvent.disableClickPropagation(div);
+      return div;
+    },
+  });
+  map.addControl(new OpacityControl({ position: 'bottomleft' }));
+  document.getElementById('opacitySlider').addEventListener('input', (e) => {
+    sentinel2Composite.setOpacity(e.target.value / 100);
+  });
+
+  // Info box
+  const InfoControl = L.Control.extend({
+    onAdd: function () {
+      const div = L.DomUtil.create('div', 'info-box');
+      div.innerHTML =
+        '<strong>Sentinel-2 — Thailand 2026</strong><br>' +
+        'Cloud-free median composite (COPERNICUS/S2_SR_HARMONIZED, masked with s2cloudless).<br>' +
+        'Composite reflects imagery available up to the export date — not necessarily a full calendar year.';
+      return div;
+    },
+  });
+  map.addControl(new InfoControl({ position: 'topright' }));
+</script>
+</body>
+</html>

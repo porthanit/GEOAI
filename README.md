@@ -124,7 +124,7 @@ GEOAI/
 
 สร้างด้วย 🐍 Python · pandas · geopandas · folium
 
-📍 สนใจข้อมูลเชิงพื้นที่ ติดตามที่ **PORTHA Channel**
+📍 อยากรู้เรื่อง GIS และข้อมูลเชิงพื้นที่เพิ่มเติม? ติดตามที่ **PORTHA Channel**
 [คลิกที่นี่](https://www.youtube.com/watch?v=8or7MoUCQHY&list=PLh1MlD0Zdj-B_-GZN4WCCY3BKwhWuD5hH)
 
 </div>

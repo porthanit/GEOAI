@@ -26,7 +26,7 @@
 ```bash
 python -m venv .venv
 .venv\Scripts\activate      # Windows
-pip install pandas openpyxl pdfplumber matplotlib
+pip install -r requirements.txt
 ```
 
 ### 2. ดาวน์โหลดไฟล์ PDF ต้นฉบับ

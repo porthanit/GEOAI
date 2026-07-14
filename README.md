@@ -9,6 +9,8 @@
 ![geopandas](https://img.shields.io/badge/geopandas-GIS-139C5A?logo=python&logoColor=white)
 ![status](https://img.shields.io/badge/status-active-brightgreen)
 
+*Created and modified by Thanit Nukoolrat and Claude*
+
 </div>
 
 ---
